@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1920.0" styleClass="mygridStyle" stylesheets="@../uiImg/Style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.AirlineController">
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="Generate">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#generateListView" text="Flights" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Sort">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#sortDate" text="By date" />
+                        <MenuItem mnemonicParsing="false" onAction="#sortTime" text="By time" />
+                        <MenuItem mnemonicParsing="false" onAction="#sortAirline" text="By airline" />
+                        <MenuItem mnemonicParsing="false" onAction="#sortFlightNumber" text="By flight number" />
+                        <MenuItem mnemonicParsing="false" onAction="#sortDestination" text="By destination" />
+                        <MenuItem mnemonicParsing="false" onAction="#sortGate" text="By boarding gate" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Search">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#searchMenu" text="Search menu" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox alignment="CENTER_LEFT" prefHeight="91.0" prefWidth="600.0">
+               <children>
+                  <Label fx:id="currentTimeLabel" prefHeight="45.0" prefWidth="220.0" text="13:42" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="30.0" />
+                     </font>
+                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="152.0" prefWidth="588.0" visible="false" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="45.0" prefWidth="293.0" text="Salidas/Departures" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="30.0" />
+                     </font>
+                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="152.0" prefWidth="557.0" visible="false" HBox.hgrow="ALWAYS" />
+                  <ImageView fitHeight="152.0" fitWidth="556.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../uiImg/EveryAirlines.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <VBox fx:id="mainVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox fx:id="titleHBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label text="Date">
+                     <font>
+                        <Font name="System Bold" size="23.0" />
+                     </font>
+                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="100.0" prefWidth="319.0" visible="false" />
+                  <Label prefHeight="34.0" prefWidth="66.0" text="Time">
+                     <font>
+                        <Font name="System Bold" size="23.0" />
+                     </font>
+                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="100.0" prefWidth="306.0" visible="false" />
+                  <Label text="Airline">
+                     <font>
+                        <Font name="System Bold" size="23.0" />
+                     </font>
+                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="100.0" prefWidth="266.0" visible="false" />
+                  <Label text="Flight Number">
+                     <font>
+                        <Font name="System Bold" size="23.0" />
+                     </font>
+                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="100.0" prefWidth="245.0" visible="false" />
+                  <Label text="Destiny">
+                     <font>
+                        <Font name="System Bold" size="23.0" />
+                     </font>
+                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="100.0" prefWidth="137.0" visible="false" />
+                  <Label text="Boarding Gate">
+                     <font>
+                        <Font name="System Bold" size="23.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <TextField fx:id="numberOfFlights" alignment="CENTER" prefHeight="25.0" prefWidth="703.0" visible="false">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextField>
+            <ListView fx:id="flightsList" disable="true" prefHeight="591.0" prefWidth="1920.0" />
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Separator orientation="VERTICAL" prefHeight="104.0" prefWidth="383.0" visible="false" />
+            <Button fx:id="leftButton" mnemonicParsing="false" onAction="#leftPageButton" prefHeight="104.0" prefWidth="85.0">
+               <graphic>
+                  <ImageView fitHeight="96.0" fitWidth="123.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../uiImg/left_button.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <TextField fx:id="pageTextField" alignment="CENTER" />
+            <Button fx:id="rightButton" mnemonicParsing="false" onAction="#rightPageButton" prefHeight="104.0" prefWidth="85.0">
+               <graphic>
+                  <ImageView fitHeight="96.0" fitWidth="123.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../uiImg/right_button.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Separator orientation="VERTICAL" prefHeight="104.0" prefWidth="490.0" visible="false" />
+            <Label fx:id="timeTakenLabel">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>
