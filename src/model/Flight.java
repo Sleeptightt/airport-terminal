@@ -47,6 +47,80 @@ public class Flight implements Comparable<Flight>{
 		return pos;
 	}
 	
+	public int linearSearchTime(Flight[] f, FlightTime value) {
+        int pos = -1;
+        for (int i = 0; i < f.length && pos==-1; i++) {
+            if(f[i].flightTime.equals(value))
+                pos = i;
+        }
+        return pos;
+    }
+    
+    public int binarySearchAirline(Flight[] f, String value, int start, int end) {
+        if(end-start <= 1) {
+            if(f[start].airline.equals(value))
+            	return start;
+            if(f[end].airline.equals(value))
+            	return end;
+            return -1;
+        }
+       
+        int midPoint = (start+end)/2;
+        if(f[midPoint].airline.compareTo(value) < 0)
+            return binarySearchAirline(f, value, midPoint, end);
+        else
+            return binarySearchAirline(f, value, start, midPoint);
+        
+    }
+	
+    public int binarySearchFlightNumber(Flight[] f, String value, int start, int end) {
+    	 if(end-start <= 1) {
+             if(f[start].flightNumber.equals(value))
+             	return start;
+             if(f[end].flightNumber.equals(value))
+             	return end;
+             return -1;
+         }
+        
+         int midPoint = (start+end)/2;
+         if(f[midPoint].flightNumber.compareTo(value) < 0)
+             return binarySearchFlightNumber(f, value, midPoint, end);
+         else
+             return binarySearchFlightNumber(f, value, start, midPoint);
+	}
+    
+    public int binarySearchDestination(Flight[] f, String value, int start, int end) {
+   	 if(end-start <= 1) {
+            if(f[start].destination.equals(value))
+            	return start;
+            if(f[end].destination.equals(value))
+            	return end;
+            return -1;
+        }
+       
+        int midPoint = (start+end)/2;
+        if(f[midPoint].destination.compareTo(value) < 0)
+            return binarySearchDestination(f, value, midPoint, end);
+        else
+            return binarySearchDestination(f, value, start, midPoint);
+	}
+    
+    public int binarySearchBoardingGate(Flight[] f, int value, int start, int end) {
+      	 if(end-start <= 1) {
+               if(f[start].boardingGate == value)
+               	return start;
+               if(f[end].boardingGate == value)
+               	return end;
+               return -1;
+           }
+          
+           int midPoint = (start+end)/2;
+           if(f[midPoint].boardingGate < value)
+               return binarySearchBoardingGate(f, value, midPoint, end);
+           else
+               return binarySearchBoardingGate(f, value, start, midPoint);
+   	}
+    
 	@Override
 	public String toString() {
 		return flightDate + ";" + flightTime + ";" + airline + ";" + flightNumber + ";" + destination + ";" + boardingGate;
@@ -71,4 +145,9 @@ public class Flight implements Comparable<Flight>{
 	public String getFlightNumber() {
 		return flightNumber;
 	}
+
+	public FlightDate getFlightDate() {
+		return flightDate;
+	}
+
 }

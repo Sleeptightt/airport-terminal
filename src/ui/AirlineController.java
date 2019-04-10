@@ -16,9 +16,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -26,7 +28,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -356,11 +357,11 @@ public class AirlineController {
     	searchMenu.initOwner(stage);
         VBox searchVbox = new VBox(20);
         searchVbox.setAlignment(Pos.CENTER);
-        searchVbox.getChildren().add(new Text("Select the search criteria"));
+        searchVbox.getChildren().add(new Label("Select the search criteria"));
         ComboBox<String> options = new ComboBox<String>(items);
         options.setPromptText("Search criteria");
         searchVbox.getChildren().add(options);
-        searchVbox.getChildren().add(new Text("Enter what you want to search for"));
+        searchVbox.getChildren().add(new Label("Enter what you want to search for"));
         TextField value = new TextField(); value.setPromptText("Keyword");
         value.setAlignment(Pos.CENTER);
         searchVbox.getChildren().add(value);
@@ -368,9 +369,9 @@ public class AirlineController {
         search.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent a) {
-				if(!options.getValue().isEmpty() && !value.getText().isEmpty()) {
+				if(options.getValue()!=null && !options.getValue().isEmpty() && !value.getText().isEmpty()) {
 					try {
-						int index = -1;
+						Flight index = null;
 						if(options.getValue().equals("Date"))
 							index = airport.search(1, value.getText());
 						else if(options.getValue().equals("Time"))
@@ -382,21 +383,59 @@ public class AirlineController {
 						else if(options.getValue().equals("Destiny"))
 							index = airport.search(5, value.getText());
 						else
-							index = airport.search(5, value.getText());
-						if(index == -1) {
-							
-						}
-						else {
-							
-						}
-					} catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+							index = airport.search(6, value.getText());
+						Stage item = new Stage();
+                        item.initModality(Modality.APPLICATION_MODAL);
+                        item.initOwner(searchMenu);
+                        if(index == null) {
+                             VBox itemVbox = new VBox(20);
+                             itemVbox.setAlignment(Pos.CENTER);
+                             itemVbox.getChildren().add(new Label("No item was found"));
+                             Scene itemScene = new Scene(itemVbox, 300, 200);
+                             itemScene.getStylesheets().add("uiImg/Style.css");
+                             item.setScene(itemScene);
+                             item.show();
+                        }
+                        else {
+                        	  VBox itemVbox = new VBox(20);
+                              itemVbox.setAlignment(Pos.CENTER);
+                              Label la = new Label("Airline: ");
+                              la.setContentDisplay(ContentDisplay.RIGHT);
+                              String airline = "uiImg/american-logo.jpg";
+                              if(index.getAirline().equals(Flight.AVIANCA))
+                            	  airline = "uiImg/Avianca-logo.jpg";
+                              else if(index.getAirline().equals(Flight.COPA))
+                            	  airline = "uiImg/copa.png";
+                              else if(index.getAirline().equals(Flight.IBERIA))
+                            	  airline = "uiImg/iberia-logo.png";
+                              else if(index.getAirline().equals(Flight.JETBLUE))
+                            	  airline = "uiImg/jetblue-airways-vector-logo.png";
+                              else if(index.getAirline().equals(Flight.UNITED))
+                            	  airline = "uiImg/united.png";
+                              ImageView im = new ImageView(airline);
+                              im.setFitHeight(200); im.setFitWidth(500);
+                              la.setGraphic(im);
+                              itemVbox.getChildren().add(new Label("Date: " + index.getFlightDate()));
+                              itemVbox.getChildren().add(new Label("Time: " + index.getFlightTime()));
+                              itemVbox.getChildren().add(la);
+                              itemVbox.getChildren().add(new Label("Flight number: " + index.getFlightNumber()));
+                              itemVbox.getChildren().add(new Label("Destination: " + index.getDestination()));
+                              itemVbox.getChildren().add(new Label("Boarding gate: " + index.getBoardingGate()));
+                              Scene itemScene = new Scene(itemVbox, 900, 800);
+                              itemScene.getStylesheets().add("uiImg/Style.css");
+                              item.setScene(itemScene);
+                              item.show();
+                        }
+					} catch (NumberFormatException | StringIndexOutOfBoundsException | ArrayIndexOutOfBoundsException e) {
 						value.clear();
 					} 
 				}
 			}	
         });
         searchVbox.getChildren().add(search);
-        Scene dialogScene = new Scene(searchVbox, 300, 200);
+        searchVbox.setStyle("uiImg/Style.css");
+        Scene dialogScene = new Scene(searchVbox, 500, 400);
+        dialogScene.getStylesheets().add("uiImg/Style.css");
         searchMenu.setScene(dialogScene);
         searchMenu.show();
     }

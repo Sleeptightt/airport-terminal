@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -113,16 +114,73 @@ public class Airport {
 		}
 	}
 	
-	public int search(int criteria, String value) throws NumberFormatException, ArrayIndexOutOfBoundsException{
-		int pos = -1;
-		Flight[] f = new Flight[flights.size()];
-		f = flights.toArray(f);
-		if(criteria == 1) {
-			String[] arr = value.split("/");
-			pos = f[0].linearSearchDate(f, new FlightDate(Integer.parseInt(arr[0]), Integer.parseInt(arr[1]), Integer.parseInt(arr[2])));
-		}
-		return pos;
-	}
+	public Flight search(int criteria, String value) throws NumberFormatException, ArrayIndexOutOfBoundsException{
+        int pos = -1;
+        Flight[] f = new Flight[flights.size()];
+        f = flights.toArray(f);
+        if(criteria == 1) {
+            String[] arr = value.split("/");
+            pos = f[0].linearSearchDate(f, new FlightDate(Integer.parseInt(arr[2]), Integer.parseInt(arr[1]), Integer.parseInt(arr[0])));
+        }
+        else if(criteria == 2) {
+            int hour = Integer.parseInt(value.substring(0, 2));
+            int minute = Integer.parseInt(value.substring(3, 5));
+            String type = value.substring(6);
+            pos = f[0].linearSearchTime(f, new FlightTime(hour, minute, type));
+        }
+        else if(criteria == 3) {
+        	Arrays.sort(f, new Comparator<Flight>() {
+				@Override
+				public int compare(Flight a, Flight b) {
+					int comparison = 0;
+					if (!a.getAirline().equals(b.getAirline()))
+						comparison = a.getAirline().compareTo(b.getAirline());
+					return comparison;
+				}
+			});
+            pos = f[0].binarySearchAirline(f, value, 0, f.length-1);
+        }
+        else if(criteria == 4) {
+        	Arrays.sort(f, new Comparator<Flight>() {
+				@Override
+				public int compare(Flight a, Flight b) {
+					int comparison = 0;
+					if (!a.getFlightNumber().equals(b.getFlightNumber()))
+						comparison = a.getFlightNumber().compareTo(b.getFlightNumber());
+					return comparison;
+				}
+			});
+            pos = f[0].binarySearchFlightNumber(f, value, 0, f.length-1);
+        }
+        else if(criteria == 5) {
+        	Arrays.sort(f, new Comparator<Flight>() {
+				@Override
+				public int compare(Flight a, Flight b) {
+					int comparison = 0;
+					if (!a.getDestination().equals(b.getDestination()))
+						comparison = a.getDestination().compareTo(b.getDestination());
+					return comparison;
+				}
+			});
+            pos = f[0].binarySearchDestination(f, value, 0, f.length-1);
+        }
+        else if(criteria == 6) {
+        	Arrays.sort(f, new Comparator<Flight>() {
+				@Override
+				public int compare(Flight a, Flight b) {
+					int comparison = 0;
+					if (a.getBoardingGate() != b.getBoardingGate())
+						comparison = a.getBoardingGate() - b.getBoardingGate();
+					return comparison;
+				}
+			});
+            pos = f[0].binarySearchBoardingGate(f, Integer.parseInt(value), 0, f.length-1);
+        }
+        Flight myFlight = null;
+        if(pos!=-1)
+        	myFlight = f[pos];
+        return myFlight;
+    }
 	
 
 	/**
