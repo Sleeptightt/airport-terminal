@@ -3,6 +3,8 @@ package ui;
 import model.Airport;
 import model.Flight;
 import threads.CurrentTimeThread;
+
+import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -31,43 +33,97 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * <b> Laboratorio unidad 4 </b>
+ * @author César Canales <br>
+ * Universidad Icesi
+ */
 public class AirlineController {
 
+	/**
+	 * The main stage of the fxml file.
+	 */
 	private Stage stage;
 	
+	/**
+	 * The airport of the controller.
+	 */
 	private Airport airport;
 	
+	/**
+	 * The current time of the day.
+	 */
 	private LocalTime curTime;
 	
+	/**
+	 * The thread that advances the current time.
+	 */
 	private CurrentTimeThread cT;
 
+    /**
+     * The label that shows the current time on screen.
+     */
     @FXML
     private Label currentTimeLabel;
 
+    /**
+     * The label that shows the number of pages on screen.
+     */
+    @FXML
+    private Label pageNumberLabel;
+
+    
+    /**
+     * A textfield that reads the number of flights.
+     */
     @FXML
     private TextField numberOfFlights;
     
+    /**
+     * The main VBox of the scene.
+     */
     @FXML
     private VBox mainVBox;
 
+    /**
+     * The title HBox of the stage.
+     */
     @FXML
     private HBox titleHBox;
     
+    /**
+     * The right button of the pagination.
+     */
     @FXML
     private Button rightButton;
     
+    /**
+     * The left button of the pagination.
+     */
     @FXML
     private Button leftButton;
     
+    /**
+     * The listview that shows all the airport's flights.
+     */
     @FXML
     private ListView<GridPane> flightsList;
     
+    /**
+     * The textfield that allows to change the current page.
+     */
     @FXML
     private TextField pageTextField;
     
+    /**
+     * The label that shows how much time it took to search or sort.
+     */
     @FXML
     private Label timeTakenLabel;
     
+    /**
+     * This function initializes all the elements of the GUI.
+     */
     @FXML
     public void initialize() {
     	stage = new Stage();
@@ -112,6 +168,10 @@ public class AirlineController {
     	cT.start();
     }
     
+    /**
+     * This function is triggered when the left page button is pressed.
+     * @param event The event that triggered this function to be called.
+     */
     @FXML
     void leftPageButton(ActionEvent event) {
     	if(rightButton.isDisabled())
@@ -123,7 +183,11 @@ public class AirlineController {
     	if(airport.getPage() == 1)
     		leftButton.setDisable(true);
     }
-
+    
+    /**
+     * This function is triggered when the right page button is pressed.
+     * @param event The event that triggered this function to be called.
+     */
     @FXML
     void rightPageButton(ActionEvent event) {
     	if(leftButton.isDisabled())
@@ -136,11 +200,18 @@ public class AirlineController {
     		rightButton.setDisable(true);
     }
     
+    /**
+     * This function changes the current time.
+     */
     public void changeTime() {
     	curTime = curTime.plusSeconds(1);
     	currentTimeLabel.setText(DateTimeFormatter.ofPattern("hh:mm:ss a").format(curTime));
     }
     
+    /**
+     * This function is triggered when the generate button is pressed.
+     * @param event The event that triggered this function to be called.
+     */
     @FXML
     void generateListView(ActionEvent event) {
     	numberOfFlights.clear();
@@ -149,7 +220,6 @@ public class AirlineController {
     	title.setStyle("-fx-font-weight: bold");
     	numberOfFlights.setVisible(true);
     	Button generateButton = new Button("Generate");
-    	//generateButton.setFont(new Font(25));; Note: shrinking button :[
     	generateButton.setStyle("-fx-font-weight: bold");
     	generateButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -157,11 +227,18 @@ public class AirlineController {
 			public void handle(ActionEvent a) {
 				boolean in = false;
 				try {
+					long start = System.currentTimeMillis();
 					airport.generateFlights(Integer.parseInt(numberOfFlights.getText()));
+					long diff = (System.currentTimeMillis() - start)/1000;
+					timeTakenLabel.setText("Time taken to generate: " + diff + " seconds");
+					if(Integer.parseInt(numberOfFlights.getText())<0)
+						throw new NumberFormatException();
 				}catch(NumberFormatException e) {
 					in = true;
 					numberOfFlights.clear();
 					numberOfFlights.setPromptText("Please enter a valid number");
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 				if(!in) {
 					mainVBox.getChildren().remove(title);
@@ -171,6 +248,7 @@ public class AirlineController {
 					Collections.sort(airport.getFLights());
 					int low = Integer.parseInt(airport.getPositions()[airport.getPage()-1].split(";")[0]);
 			    	int high = Integer.parseInt(airport.getPositions()[airport.getPage()-1].split(";")[1]);
+			    	pageNumberLabel.setText("Number of pages: " + airport.getPositions().length);
 					fillList(low, high);
 				}
 			}
@@ -180,6 +258,11 @@ public class AirlineController {
     	mainVBox.getChildren().add(3, generateButton);
     }
     
+    /**
+     * This function fills the list view depending on the lower and upper bounds.
+     * @param low The lower bound of the list.
+     * @param high The upper bound of the list.
+     */
     public void fillList(int low, int high) {
     	ObservableList<GridPane> items = FXCollections.observableArrayList();
     	for (int i = low; i <= high; i++) {
@@ -210,6 +293,10 @@ public class AirlineController {
     	pageTextField.setText(airport.getPage()+"");
     }
     
+    /**
+     * This function is triggered when the sort airline button is pressed.
+     * @param event The event that triggered this function to be called.
+     */
     @FXML
     void sortAirline(ActionEvent event) {
     	if (!airport.getFLights().isEmpty()) {
@@ -234,6 +321,10 @@ public class AirlineController {
 		}
     }
 
+    /**
+     * This function is triggered when the sort date button is pressed.
+     * @param event The event that triggered this function to be called.
+     */
     @FXML
     void sortDate(ActionEvent event) {
     	if (!airport.getFLights().isEmpty()) {
@@ -248,6 +339,10 @@ public class AirlineController {
 		}
     }
 
+    /**
+     * This function is triggered when the sort destination button is pressed.
+     * @param event The event that triggered this function to be called.
+     */
     @FXML
     void sortDestination(ActionEvent event) {
     	if (!airport.getFLights().isEmpty()) {
@@ -272,6 +367,10 @@ public class AirlineController {
 		}
     }
 
+    /**
+     * This function is triggered when the sort flight number button is pressed.
+     * @param event The event that triggered this function to be called.
+     */
     @FXML
     void sortFlightNumber(ActionEvent event) {
     	if (!airport.getFLights().isEmpty()) {
@@ -296,6 +395,10 @@ public class AirlineController {
 		}
     }
 
+    /**
+     * This function is triggered when the sort gate button is pressed.
+     * @param event The event that triggered this function to be called.
+     */
     @FXML
     void sortGate(ActionEvent event) {
     	if (!airport.getFLights().isEmpty()) {
@@ -324,6 +427,10 @@ public class AirlineController {
 		}
     }
 
+    /**
+     * This function is triggered when the sort time button is pressed.
+     * @param event The event that triggered this function to be called.
+     */
     @FXML
     void sortTime(ActionEvent event) {
     	if (!airport.getFLights().isEmpty()) {
@@ -348,10 +455,14 @@ public class AirlineController {
 		}
     }
 
+    /**
+     * This function is triggered when the search button is pressed.
+     * @param event The event that triggered this function to be called.
+     */
     @FXML
     void searchMenu(ActionEvent event) {
     	ObservableList<String> items = FXCollections.observableArrayList();
-    	items.add("Date"); items.add("Time"); items.add("Airline"); items.add("Flight number"); items.add("Destiny"); items.add("Boarding gate");
+    	items.add("Date(day/month/year)"); items.add("Time(hour:minute A.M/P.M)"); items.add("Airline"); items.add("Flight number"); items.add("Destiny"); items.add("Boarding gate");
     	Stage searchMenu = new Stage();
     	searchMenu.initModality(Modality.APPLICATION_MODAL);
     	searchMenu.initOwner(stage);
@@ -361,7 +472,7 @@ public class AirlineController {
         ComboBox<String> options = new ComboBox<String>(items);
         options.setPromptText("Search criteria");
         searchVbox.getChildren().add(options);
-        searchVbox.getChildren().add(new Label("Enter what you want to search for"));
+        searchVbox.getChildren().add(new Label("Enter what you want to search for(Case sensitive)"));
         TextField value = new TextField(); value.setPromptText("Keyword");
         value.setAlignment(Pos.CENTER);
         searchVbox.getChildren().add(value);
@@ -372,9 +483,10 @@ public class AirlineController {
 				if(options.getValue()!=null && !options.getValue().isEmpty() && !value.getText().isEmpty()) {
 					try {
 						Flight index = null;
-						if(options.getValue().equals("Date"))
+						long start = System.currentTimeMillis();
+						if(options.getValue().equals("Date(day/month/year)"))
 							index = airport.search(1, value.getText());
-						else if(options.getValue().equals("Time"))
+						else if(options.getValue().equals("Time(hour:minute A.M/P.M)"))
 							index = airport.search(2, value.getText());
 						else if(options.getValue().equals("Airline"))
 							index = airport.search(3, value.getText());
@@ -384,6 +496,8 @@ public class AirlineController {
 							index = airport.search(5, value.getText());
 						else
 							index = airport.search(6, value.getText());
+						long end = System.currentTimeMillis();
+						long diff = (end-start)/1000;
 						Stage item = new Stage();
                         item.initModality(Modality.APPLICATION_MODAL);
                         item.initOwner(searchMenu);
@@ -391,7 +505,8 @@ public class AirlineController {
                              VBox itemVbox = new VBox(20);
                              itemVbox.setAlignment(Pos.CENTER);
                              itemVbox.getChildren().add(new Label("No item was found"));
-                             Scene itemScene = new Scene(itemVbox, 300, 200);
+                             itemVbox.getChildren().add(new Label("Time taken to search: " + diff + " seconds"));
+                             Scene itemScene = new Scene(itemVbox, 400, 200);
                              itemScene.getStylesheets().add("uiImg/Style.css");
                              item.setScene(itemScene);
                              item.show();
@@ -421,6 +536,7 @@ public class AirlineController {
                               itemVbox.getChildren().add(new Label("Flight number: " + index.getFlightNumber()));
                               itemVbox.getChildren().add(new Label("Destination: " + index.getDestination()));
                               itemVbox.getChildren().add(new Label("Boarding gate: " + index.getBoardingGate()));
+                              itemVbox.getChildren().add(new Label("Time taken to search: " + diff + " seconds"));
                               Scene itemScene = new Scene(itemVbox, 900, 800);
                               itemScene.getStylesheets().add("uiImg/Style.css");
                               item.setScene(itemScene);
@@ -434,16 +550,24 @@ public class AirlineController {
         });
         searchVbox.getChildren().add(search);
         searchVbox.setStyle("uiImg/Style.css");
-        Scene dialogScene = new Scene(searchVbox, 500, 400);
+        Scene dialogScene = new Scene(searchVbox, 600, 400);
         dialogScene.getStylesheets().add("uiImg/Style.css");
         searchMenu.setScene(dialogScene);
         searchMenu.show();
     }
     
+    /**
+     * This function modifies the controller's stage.
+     * @param stage The stage to set.
+     */
     public void setStage(Stage stage) {
     	this.stage = stage;
     }
 
+	/**
+	 * This function obtains the current time thread.
+	 * @return The current time thread.
+	 */
 	public CurrentTimeThread getCT() {
 		return cT;
 	}   

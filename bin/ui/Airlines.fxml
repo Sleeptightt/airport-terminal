@@ -121,6 +121,7 @@
    <bottom>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
+            <Label fx:id="pageNumberLabel" />
             <Separator orientation="VERTICAL" prefHeight="104.0" prefWidth="383.0" visible="false" />
             <Button fx:id="leftButton" mnemonicParsing="false" onAction="#leftPageButton" prefHeight="104.0" prefWidth="85.0">
                <graphic>

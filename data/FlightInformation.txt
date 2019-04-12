@@ -1,0 +1,3 @@
+Avianca;American Airlines;Copa Airlines;United Airlines;Iberia;JetBlue Airways
+Madrid;New York;Beijing;France;Buenos Aires;Panama;Quito;Lima;Bogota;Berlin
+A.M;P.M

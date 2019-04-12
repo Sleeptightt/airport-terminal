@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"ui","l":"AirlineController"},{"p":"model","l":"Airport"},{"p":"threads","l":"CurrentTimeThread"},{"p":"model","l":"Flight"},{"p":"model","l":"FlightDate"},{"p":"model","l":"FlightTime"},{"p":"threads","l":"GeneratingThread"},{"p":"ui","l":"Main"},{"p":"threads","l":"SortingThread"}]
