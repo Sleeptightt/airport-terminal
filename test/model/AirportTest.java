@@ -3,7 +3,6 @@ package model;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.Comparator;
 
 import org.junit.jupiter.api.Test;
@@ -51,11 +50,7 @@ class AirportTest {
 	void generateFlightsTest() {
 		setupScenery2();
 		int n = 10;
-		try {
-			a.generateFlights(n);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		a.generateFlights(n);
 		assertTrue("The flights weren't generated", a.getFLights().size() == 10);
 	}
 	
@@ -66,11 +61,7 @@ class AirportTest {
 	void bubbleSortTest() {
 		setupScenery2();
 		int n = 10;
-		try {
-			a.generateFlights(n);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		a.generateFlights(n);
 		a.bubbleSort(new Comparator<Flight>() {
 
 			@Override
@@ -95,11 +86,7 @@ class AirportTest {
 	void selectionSortTest() {
 		setupScenery2();
 		int n = 10;
-		try {
-			a.generateFlights(n);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		a.generateFlights(n);
 		a.selectionSort(new Comparator<Flight>() {
 
 			@Override
@@ -124,11 +111,7 @@ class AirportTest {
 	void insertionSortTest() {
 		setupScenery2();
 		int n = 10;
-		try {
-			a.generateFlights(n);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		a.generateFlights(n);
 		a.insertionSort(new Comparator<Flight>() {
 
 			@Override

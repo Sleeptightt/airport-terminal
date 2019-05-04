@@ -3,8 +3,6 @@ package ui;
 import model.Airport;
 import model.Flight;
 import threads.CurrentTimeThread;
-
-import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -66,13 +64,6 @@ public class AirlineController {
     @FXML
     private Label currentTimeLabel;
 
-    /**
-     * The label that shows the number of pages on screen.
-     */
-    @FXML
-    private Label pageNumberLabel;
-
-    
     /**
      * A textfield that reads the number of flights.
      */
@@ -220,6 +211,7 @@ public class AirlineController {
     	title.setStyle("-fx-font-weight: bold");
     	numberOfFlights.setVisible(true);
     	Button generateButton = new Button("Generate");
+    	//generateButton.setFont(new Font(25));; Note: shrinking button :[
     	generateButton.setStyle("-fx-font-weight: bold");
     	generateButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -237,8 +229,6 @@ public class AirlineController {
 					in = true;
 					numberOfFlights.clear();
 					numberOfFlights.setPromptText("Please enter a valid number");
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
 				if(!in) {
 					mainVBox.getChildren().remove(title);
@@ -248,7 +238,6 @@ public class AirlineController {
 					Collections.sort(airport.getFLights());
 					int low = Integer.parseInt(airport.getPositions()[airport.getPage()-1].split(";")[0]);
 			    	int high = Integer.parseInt(airport.getPositions()[airport.getPage()-1].split(";")[1]);
-			    	pageNumberLabel.setText("Number of pages: " + airport.getPositions().length);
 					fillList(low, high);
 				}
 			}
@@ -320,7 +309,7 @@ public class AirlineController {
 			fillList(low, high);
 		}
     }
-
+    	
     /**
      * This function is triggered when the sort date button is pressed.
      * @param event The event that triggered this function to be called.
@@ -338,7 +327,7 @@ public class AirlineController {
 			fillList(low, high);
 		}
     }
-
+    
     /**
      * This function is triggered when the sort destination button is pressed.
      * @param event The event that triggered this function to be called.
@@ -462,7 +451,7 @@ public class AirlineController {
     @FXML
     void searchMenu(ActionEvent event) {
     	ObservableList<String> items = FXCollections.observableArrayList();
-    	items.add("Date(day/month/year)"); items.add("Time(hour:minute A.M/P.M)"); items.add("Airline"); items.add("Flight number"); items.add("Destiny"); items.add("Boarding gate");
+    	items.add("Date"); items.add("Time"); items.add("Airline"); items.add("Flight number"); items.add("Destiny"); items.add("Boarding gate");
     	Stage searchMenu = new Stage();
     	searchMenu.initModality(Modality.APPLICATION_MODAL);
     	searchMenu.initOwner(stage);
@@ -472,7 +461,7 @@ public class AirlineController {
         ComboBox<String> options = new ComboBox<String>(items);
         options.setPromptText("Search criteria");
         searchVbox.getChildren().add(options);
-        searchVbox.getChildren().add(new Label("Enter what you want to search for(Case sensitive)"));
+        searchVbox.getChildren().add(new Label("Enter what you want to search for"));
         TextField value = new TextField(); value.setPromptText("Keyword");
         value.setAlignment(Pos.CENTER);
         searchVbox.getChildren().add(value);
@@ -484,9 +473,9 @@ public class AirlineController {
 					try {
 						Flight index = null;
 						long start = System.currentTimeMillis();
-						if(options.getValue().equals("Date(day/month/year)"))
+						if(options.getValue().equals("Date"))
 							index = airport.search(1, value.getText());
-						else if(options.getValue().equals("Time(hour:minute A.M/P.M)"))
+						else if(options.getValue().equals("Time"))
 							index = airport.search(2, value.getText());
 						else if(options.getValue().equals("Airline"))
 							index = airport.search(3, value.getText());
@@ -506,7 +495,7 @@ public class AirlineController {
                              itemVbox.setAlignment(Pos.CENTER);
                              itemVbox.getChildren().add(new Label("No item was found"));
                              itemVbox.getChildren().add(new Label("Time taken to search: " + diff + " seconds"));
-                             Scene itemScene = new Scene(itemVbox, 400, 200);
+                             Scene itemScene = new Scene(itemVbox, 300, 200);
                              itemScene.getStylesheets().add("uiImg/Style.css");
                              item.setScene(itemScene);
                              item.show();
@@ -550,7 +539,7 @@ public class AirlineController {
         });
         searchVbox.getChildren().add(search);
         searchVbox.setStyle("uiImg/Style.css");
-        Scene dialogScene = new Scene(searchVbox, 600, 400);
+        Scene dialogScene = new Scene(searchVbox, 500, 400);
         dialogScene.getStylesheets().add("uiImg/Style.css");
         searchMenu.setScene(dialogScene);
         searchMenu.show();

@@ -3,7 +3,6 @@ package model;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -60,7 +59,7 @@ class FlightTest {
 	}
 
 	/**
-	 * This function tests whether or not the flights are being compared correctly.
+	 * This function tets whether or not the flights are being compared correctly.
 	 */
 	@Test
 	void compareToTest() {
@@ -76,11 +75,7 @@ class FlightTest {
 	void linearSearchDateTest() {
 		setupScenery2();
 		Airport a = new Airport();
-		try {
-			a.generateFlights(11);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
 		int pos = f.linearSearchDate(a.getFLights().toArray(new Flight[a.getFLights().size()]), f1.getFlightDate());
 		assertTrue("The search isn't right", a.getFLights().get(pos).equals(f1));
@@ -93,11 +88,7 @@ class FlightTest {
 	void linearSearchTimeTest() {
 		setupScenery2();
 		Airport a = new Airport();
-		try {
-			a.generateFlights(11);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
 		int pos = f.linearSearchTime(a.getFLights().toArray(new Flight[a.getFLights().size()]), f1.getFlightTime());
 		assertTrue("The search isn't right", a.getFLights().get(pos).equals(f1));
@@ -110,11 +101,7 @@ class FlightTest {
 	void binarySearchAirlineTest() {
 		setupScenery2();
 		Airport a = new Airport();
-		try {
-			a.generateFlights(11);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
 		Flight[] flights = a.getFLights().toArray(new Flight[a.getFLights().size()]);
 		Arrays.sort(flights, new Comparator<Flight>() {
@@ -137,11 +124,7 @@ class FlightTest {
 	void binarySearchFlightNumberTest() {
 		setupScenery2();
 		Airport a = new Airport();
-		try {
-			a.generateFlights(11);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
 		Flight[] flights = a.getFLights().toArray(new Flight[a.getFLights().size()]);
 		Arrays.sort(flights, new Comparator<Flight>() {
@@ -164,11 +147,7 @@ class FlightTest {
 	void binarySearchDestinationTest() {
 		setupScenery2();
 		Airport a = new Airport();
-		try {
-			a.generateFlights(11);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
 		Flight[] flights = a.getFLights().toArray(new Flight[a.getFLights().size()]);
 		Arrays.sort(flights, new Comparator<Flight>() {
@@ -191,11 +170,7 @@ class FlightTest {
 	void binarySearchBoardingGateTest() {
 		setupScenery2();
 		Airport a = new Airport();
-		try {
-			a.generateFlights(11);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
 		Flight[] flights = a.getFLights().toArray(new Flight[a.getFLights().size()]);
 		Arrays.sort(flights, new Comparator<Flight>() {

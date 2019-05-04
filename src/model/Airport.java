@@ -1,9 +1,5 @@
 package model;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -20,7 +16,7 @@ public class Airport {
 	/**
 	 * A list of flights of the airport.
 	 */
-	private List<Flight> flights;
+	private Flight first;
 	
 	/**
 	 * The current page of the airport terminal.
@@ -32,24 +28,40 @@ public class Airport {
 	 */
 	private String[] positions;
 	
+	private int size;
+	
 	/**
 	 * This function initializes a new Airport.
 	 */
 	public Airport() {
-		flights = new ArrayList<Flight>();
+		first = null;
 		page = 1;
 	}
 	
 	/**
 	 * This function generates the specified number of flights randomly. It also calculates the positions of each of the pages.
 	 * @param n The number of flights to be generated.
-	 * @throws IOException If the specified file doesn't exist.
 	 */
-	public void generateFlights(int n) throws IOException {
+	public void generateFlights(int n) {
+		size = n;
 		for (int i = 0; i < n; i++) {
-			flights.add(getRandomFlight());
+			addFlight(getRandomFlight());
 		}
 		calculatePositions(n);
+	}
+	
+	public void addFlight(Flight f) {
+		if(first==null) {
+			first = f;
+		}
+		else {
+			Flight curr = first;
+			while (curr.getNext()!=null) {
+				curr = curr.getNext();
+			}
+			curr.setNext(f);
+			f.setPrev(curr);
+		}
 	}
 	
 	/**
@@ -78,14 +90,11 @@ public class Airport {
 	/**
 	 * This function randomly generates a flight with the Random java function.
 	 * @return The randomly generated flight.
-	 * @throws IOException If the specified file doesn't exist.
 	 */
-	public Flight getRandomFlight() throws IOException {
-		BufferedReader in = new BufferedReader(new FileReader(new File("data/FlightInformation.txt")));
-		String[] airlines = in.readLine().split(";");
-		String[] cities = in.readLine().split(";");
-		String[] timeTypes = in.readLine().split(";");
-		in.close();
+	public Flight getRandomFlight() {
+		String[] airlines = {Flight.AVIANCA, Flight.AMERICAN, Flight.COPA, Flight.IBERIA, Flight.UNITED, Flight.JETBLUE};
+		String[] cities = {"Madrid", "New York", "Beijing", "France", "Buenos Aires", "Panama", "Quito", "Lima", "Bogota", "Berlin"};
+		String[] timeTypes = {FlightTime.AM, FlightTime.PM};
 		int random = 0 +  (int)(Math.random()*(6));
 		String airline = airlines[random];
 		random = 0 +  (int)(Math.random()*(10));
@@ -117,16 +126,28 @@ public class Airport {
 	 * @param c A comparator that determines the criteria in which the flights are going to be sorted.
 	 */
 	public void bubbleSort(Comparator<Flight> c) {
-		for (int i = 0; i < flights.size(); i++) {
-			for(int j = 0; j < flights.size()-i-1;j++) {
-				if(c.compare(flights.get(j), flights.get(j+1)) > 0) {
-					Flight temp = flights.get(j);
-					flights.set(j, flights.get(j+1));
-					flights.set(j+1, temp);
+		for (int i = 0; i < size; i++) {
+			Flight curr = first;
+			for(int j = 0; j < size-i-1;j++) {
+				if(c.compare(curr, curr.getNext()) > 0) {
+				/*	if(j==0)
+						first = curr.getNext();
+					curr.setNext(curr.getNext().getNext());
+					curr.setPrev(curr.getNext());
+					curr.getNext().setNext(curr);
+					curr.getNext().setPrev(curr.getPrev());*/
+					String airline = curr.getAirline();
+					String flightNumber = curr.getFlightNumber();
+					String destination = curr.getDestination();
+					int boardingGate = curr.getBoardingGate();
+					FlightDate flightDate = curr.getFlightDate();
+					FlightTime flightTime = curr.getFlightTime();
+					curr.setData(curr.getNext().getAirline(), curr.getNext().getFlightNumber(), curr.getNext().getDestination(), curr.getNext().getBoardingGate(), curr.getNext().getFlightDate(), curr.getNext().getFlightTime());
+					curr.getNext().setData(airline, flightNumber, destination, boardingGate, flightDate, flightTime);
 				}
+					curr = curr.getNext();
 			}
-		}
-		
+		}		
 	}
 	
 	/**
@@ -134,17 +155,27 @@ public class Airport {
 	 * @param c A comparator that determines the criteria in which the flights are going to be sorted.
 	 */
 	public void selectionSort(Comparator<Flight> c) {
-		for (int i = 0; i < flights.size()-1; i++) {
-			int pos = i;
-			for(int j = i+1; j < flights.size();j++) {
-				if(c.compare(flights.get(j), flights.get(pos)) < 0) {
-					pos = j;
-				}
+		Flight oCurr = first;
+		for (int i = 0; i < size-1; i++) {
+			Flight pos = oCurr;
+			Flight curr = pos.getNext();
+			for(int j = i+1; j < size;j++) {
+				if(c.compare(curr, pos) < 0) {
+					pos = curr;
+				}	
+				curr = curr.getNext();
 			}
-			Flight temp = flights.get(pos);
-			flights.set(pos, flights.get(i));
-			flights.set(i, temp);
+			String airline = oCurr.getAirline();
+			String flightNumber = oCurr.getFlightNumber();
+			String destination = oCurr.getDestination();
+			int boardingGate = oCurr.getBoardingGate();
+			FlightDate flightDate = oCurr.getFlightDate();
+			FlightTime flightTime = oCurr.getFlightTime();
+			oCurr.setData(pos.getAirline(), pos.getFlightNumber(), pos.getDestination(), pos.getBoardingGate(), pos.getFlightDate(), pos.getFlightTime());
+			pos.setData(airline, flightNumber, destination, boardingGate, flightDate, flightTime);
+			oCurr = oCurr.getNext();
 		}
+		
 	}
 
 	/**
@@ -152,13 +183,28 @@ public class Airport {
 	 * @param c A comparator that determines the criteria in which the flights are going to be sorted.
 	 */
 	public void insertionSort(Comparator<Flight> c) {
-		for (int i = 1; i < flights.size(); i++) {
+		List<Flight> flights = getFLights();
+		for (int i = 1; i < size; i++) {
+			Flight curr = first;
+			int counter = 0;
+			while(counter < i) {
+				curr = curr.getNext();
+				counter++;
+			}
 			for(int j = i; j > 0;j--) {
-				if(c.compare(flights.get(j), flights.get(j-1)) < 0) {
-					Flight temp = flights.get(j);
-					flights.set(j, flights.get(j-1));
-					flights.set(j-1, temp);
+				if(c.compare(curr, curr.getPrev()) < 0) {
+					String airline = curr.getAirline();
+					String flightNumber = curr.getFlightNumber();
+					String destination = curr.getDestination();
+					int boardingGate = curr.getBoardingGate();
+					FlightDate flightDate = curr.getFlightDate();
+					FlightTime flightTime = curr.getFlightTime();
+					Flight temp = curr.getPrev();
+					curr.setData(temp.getAirline(), temp.getFlightNumber(), temp.getDestination(), temp.getBoardingGate(), temp.getFlightDate(), temp.getFlightTime());
+					temp.setData(airline, flightNumber, destination, boardingGate, flightDate, flightTime);
+					
 				}
+				curr = curr.getPrev();
 			}
 		}
 	}
@@ -174,7 +220,7 @@ public class Airport {
 	 */
 	public Flight search(int criteria, String value) throws NumberFormatException, ArrayIndexOutOfBoundsException, StringIndexOutOfBoundsException{
         int pos = -1;
-        Flight[] f = flights.toArray(new Flight[flights.size()]);
+        Flight[] f = getFLights().toArray(new Flight[size	]);
         if(criteria == 1) {
             String[] arr = value.split("/");
             pos = f[0].linearSearchDate(f, new FlightDate(Integer.parseInt(arr[2]), Integer.parseInt(arr[1]), Integer.parseInt(arr[0])));
@@ -269,6 +315,12 @@ public class Airport {
 	 * @return The list of flights of the airport.
 	 */
 	public List<Flight> getFLights(){
+		List<Flight> flights = new ArrayList<Flight>();
+		Flight curr = first;
+		while(curr!=null) {
+			flights.add(curr);
+			curr = curr.getNext();
+		}
 		return flights;
 	}
 }

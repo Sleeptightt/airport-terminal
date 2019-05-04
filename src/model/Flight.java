@@ -67,6 +67,10 @@ public class Flight implements Comparable<Flight>{
 	 */	
 	private FlightTime flightTime;
 		
+	private Flight prev;
+	
+	private Flight next;
+	
 	/**
 	 * This function initializes a new Flight.
 	 * @param airline The airline of the flight.
@@ -292,4 +296,43 @@ public class Flight implements Comparable<Flight>{
 		return flightDate;
 	}
 
+	/**
+	 * @return the prev
+	 */
+	public Flight getPrev() {
+		return prev;
+	}
+
+
+	/**
+	 * @param prev the prev to set
+	 */
+	public void setPrev(Flight prev) {
+		this.prev = prev;
+	}
+
+
+	/**
+	 * @return the next
+	 */
+	public Flight getNext() {
+		return next;
+	}
+
+
+	/**
+	 * @param next the next to set
+	 */
+	public void setNext(Flight next) {
+		this.next = next;
+	}
+	
+	public void setData(String airline, String flightNumber, String destination, int boardingGate, FlightDate flightDate,	FlightTime flightTime) {
+		this.airline = airline;
+		this.flightNumber = flightNumber;
+		this.destination = destination;
+		this.boardingGate = boardingGate;
+		this.flightDate = flightDate;
+		this.flightTime = flightTime;
+	}
 }
