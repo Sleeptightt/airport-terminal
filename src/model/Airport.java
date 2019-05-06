@@ -28,6 +28,9 @@ public class Airport {
 	 */
 	private String[] positions;
 	
+	/**
+	 * The number of flights in the airport.
+	 */
 	private int size;
 	
 	/**
@@ -50,6 +53,10 @@ public class Airport {
 		calculatePositions(n);
 	}
 	
+	/**
+	 * This function adds a flight to the linked list of flights.
+	 * @param f The flight that is to be added to the flights list.
+	 */
 	public void addFlight(Flight f) {
 		if(first==null) {
 			first = f;
@@ -130,12 +137,6 @@ public class Airport {
 			Flight curr = first;
 			for(int j = 0; j < size-i-1;j++) {
 				if(c.compare(curr, curr.getNext()) > 0) {
-				/*	if(j==0)
-						first = curr.getNext();
-					curr.setNext(curr.getNext().getNext());
-					curr.setPrev(curr.getNext());
-					curr.getNext().setNext(curr);
-					curr.getNext().setPrev(curr.getPrev());*/
 					String airline = curr.getAirline();
 					String flightNumber = curr.getFlightNumber();
 					String destination = curr.getDestination();
@@ -183,7 +184,6 @@ public class Airport {
 	 * @param c A comparator that determines the criteria in which the flights are going to be sorted.
 	 */
 	public void insertionSort(Comparator<Flight> c) {
-		List<Flight> flights = getFLights();
 		for (int i = 1; i < size; i++) {
 			Flight curr = first;
 			int counter = 0;

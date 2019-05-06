@@ -424,7 +424,7 @@ public class AirlineController {
     void sortTime(ActionEvent event) {
     	if (!airport.getFLights().isEmpty()) {
 			long start = System.currentTimeMillis();
-			Collections.sort(airport.getFLights(), new Comparator<Flight>() {
+			airport.insertionSort(new Comparator<Flight>() {
 
 				@Override
 				public int compare(Flight a, Flight b) {
