@@ -318,7 +318,17 @@ public class AirlineController {
     void sortDate(ActionEvent event) {
     	if (!airport.getFLights().isEmpty()) {
 			long start = System.currentTimeMillis();
-			Collections.sort(airport.getFLights());
+			airport.selectionSort(new Comparator<Flight>() {
+
+				@Override
+				public int compare(Flight a, Flight b) {
+					int comparison = 0;
+					if (!a.getFlightDate().equals(b.getFlightDate()))
+						comparison = a.getFlightDate().compareTo(b.getFlightDate());
+					return comparison;
+				}
+
+			});
 			long end = System.currentTimeMillis();
 			long calc = (end - start) / 1000;
 			timeTakenLabel.setText("Time taken to sort: " + calc + " seconds");

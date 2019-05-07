@@ -67,8 +67,14 @@ public class Flight implements Comparable<Flight>{
 	 */	
 	private FlightTime flightTime;
 		
+	/**
+	 * The previous flight in the linked list.
+	 */	
 	private Flight prev;
 	
+	/**
+	 * The next flight in the linked list.
+	 */	
 	private Flight next;
 	
 	/**
@@ -109,134 +115,117 @@ public class Flight implements Comparable<Flight>{
 
 	/** 
 	 * This function does a linear search in the flight array looking for the specified date value.
-	 * @param f The array of flights of the airport.
 	 * @param value The date to be found.
-	 * @return An integer representing the position of the value in the array. If the value is not found, this function returns a -1 instead.
+	 * @param first The first flight in the linked list.
+	 * @return An integer representing the position of the value in the list. If the value is not found, this function returns a -1 instead.
 	 */
-	public int linearSearchDate(Flight[] f, FlightDate value) {
+	public int linearSearchDate(FlightDate value, Flight first) {
+		Flight curr = first;
 		int pos = -1;
-		for (int i = 0; i < f.length && pos==-1; i++) {
-			if(f[i].flightDate.equals(value))
-				pos = i;
+		int counter = 0;
+		while(curr != null && pos == -1) {
+			if(curr.flightDate.equals(value))
+				pos = counter;
+			counter++;
+			curr = curr.getNext();
 		}
 		return pos;
 	}
 	
 	/** 
 	 * This function does a linear search in the flight array looking for the specified time value.
-	 * @param f The array of flights of the airport.
 	 * @param value The time to be found.
-	 * @return An integer representing the position of the value in the array. If the value is not found, this function returns a -1 instead.
+	 * @param first The first flight in the linked list.
+	 * @return An integer representing the position of the value in the list. If the value is not found, this function returns a -1 instead.
 	 */
-	public int linearSearchTime(Flight[] f, FlightTime value) {
-        int pos = -1;
-        for (int i = 0; i < f.length && pos==-1; i++) {
-            if(f[i].flightTime.equals(value))
-                pos = i;
-        }
-        return pos;
+	public int linearSearchTime(FlightTime value, Flight first) {
+		Flight curr = first;
+		int pos = -1;
+		int counter = 0;
+		while(curr != null && pos == -1) {
+			if(curr.flightTime.equals(value))
+				pos = counter;
+			counter++;
+			curr = curr.getNext();
+		}
+		return pos;
     }
     
 	/** 
-	 * This function does a binary search in the flight array looking for the specified airline value.
-	 * Pre: The array is sorted before the search.
-	 * @param f The array of flights of the airport.
-	 * @param value The value to be found.
-	 * @param start The start position of the search.
-	 * @param end The end position of the search.
-	 * @return An integer representing the position of the value in the array. If the value is not found, this function returns a -1 instead.
+	 * This function does a linear search in the flight array looking for the specified time value.
+	 * @param value The airline to be found.
+	 * @param first The first flight in the linked list.
+	 * @return An integer representing the position of the value in the list. If the value is not found, this function returns a -1 instead.
 	 */
-    public int binarySearchAirline(Flight[] f, String value, int start, int end) {
-        if(end-start <= 1) {
-            if(f[start].airline.equalsIgnoreCase(value))
-            	return start;
-            if(f[end].airline.equalsIgnoreCase(value))
-            	return end;
-            return -1;
-        }
-       
-        int midPoint = (start+end)/2;
-        if(f[midPoint].airline.compareTo(value) < 0)
-            return binarySearchAirline(f, value, midPoint, end);
-        else
-            return binarySearchAirline(f, value, start, midPoint);
-        
+	public int linearSearchAirline(String value, Flight first) {
+		Flight curr = first;
+		int pos = -1;
+		int counter = 0;
+		while(curr != null && pos == -1) {
+			if(curr.airline.equals(value))
+				pos = counter;
+			counter++;
+			curr = curr.getNext();
+		}
+		return pos;
     }
 	
-    /** 
-	 * This function does a binary search in the flight array looking for the specified flight number value.
-	 * Pre: The array is sorted before the search.
-	 * @param f The array of flights of the airport.
-	 * @param value The value to be found.
-	 * @param start The start position of the search.
-	 * @param end The end position of the search.
-	 * @return An integer representing the position of the value in the array. If the value is not found, this function returns a -1 instead.
+	/** 
+	 * This function does a linear search in the flight array looking for the specified time value.
+	 * @param value The flight number to be found.
+	 * @param first The first flight in the linked list.
+	 * @return An integer representing the position of the value in the list. If the value is not found, this function returns a -1 instead.
 	 */
-    public int binarySearchFlightNumber(Flight[] f, String value, int start, int end) {
-    	 if(end-start <= 1) {
-             if(f[start].flightNumber.equalsIgnoreCase(value))
-             	return start;
-             if(f[end].flightNumber.equalsIgnoreCase(value))
-             	return end;
-             return -1;
-         }
-        
-         int midPoint = (start+end)/2;
-         if(f[midPoint].flightNumber.compareTo(value) < 0)
-             return binarySearchFlightNumber(f, value, midPoint, end);
-         else
-             return binarySearchFlightNumber(f, value, start, midPoint);
-	}
+	public int linearSearchFlightNumber(String value, Flight first) {
+		Flight curr = first;
+		int pos = -1;
+		int counter = 0;
+		while(curr != null && pos == -1) {
+			if(curr.flightNumber.equals(value))
+				pos = counter;
+			counter++;
+			curr = curr.getNext();
+		}
+		return pos;
+    }
     
-    /** 
-	 * This function does a binary search in the flight array looking for the specified destination value.
-	 * Pre: The array is sorted before the search.
-	 * @param f The array of flights of the airport.
-	 * @param value The value to be found.
-	 * @param start The start position of the search.
-	 * @param end The end position of the search.
-	 * @return An integer representing the position of the value in the array. If the value is not found, this function returns a -1 instead.
+	/** 
+	 * This function does a linear search in the flight array looking for the specified time value.
+	 * @param value The destination to be found.
+	 * @param first The first flight in the linked list.
+	 * @return An integer representing the position of the value in the list. If the value is not found, this function returns a -1 instead.
 	 */
-    public int binarySearchDestination(Flight[] f, String value, int start, int end) {
-   	 if(end-start <= 1) {
-            if(f[start].destination.equalsIgnoreCase(value))
-            	return start;
-            if(f[end].destination.equalsIgnoreCase(value))
-            	return end;
-            return -1;
-        }
-       
-        int midPoint = (start+end)/2;
-        if(f[midPoint].destination.compareTo(value) < 0)
-            return binarySearchDestination(f, value, midPoint, end);
-        else
-            return binarySearchDestination(f, value, start, midPoint);
-	}
-    
-    /** 
-	 * This function does a binary search in the flight array looking for the specified boarding gate value.
-	 * Pre: The array is sorted before the search.
-	 * @param f The array of flights of the airport.
-	 * @param value The value to be found.
-	 * @param start The start position of the search.
-	 * @param end The end position of the search.
-	 * @return An integer representing the position of the value in the array. If the value is not found, this function returns a -1 instead.
+	public int linearSearchDestination(String value, Flight first) {
+		Flight curr = first;
+		int pos = -1;
+		int counter = 0;
+		while(curr != null && pos == -1) {
+			if(curr.destination.equals(value))
+				pos = counter;
+			counter++;
+			curr = curr.getNext();
+		}
+		return pos;
+    }
+	
+	/**
+	 * This function does a linear search in the flight array looking for the specified time value.
+	 * @param value The boarding gate to be found.
+	 * @param first The first flight in the linked list.
+	 * @return An integer representing the position of the value in the list. If the value is not found, this function returns a -1 instead.
 	 */
-    public int binarySearchBoardingGate(Flight[] f, int value, int start, int end) {
-      	 if(end-start <= 1) {
-               if(f[start].boardingGate == value)
-               	return start;
-               if(f[end].boardingGate == value)
-               	return end;
-               return -1;
-           }
-          
-           int midPoint = (start+end)/2;
-           if(f[midPoint].boardingGate < value)
-               return binarySearchBoardingGate(f, value, midPoint, end);
-           else
-               return binarySearchBoardingGate(f, value, start, midPoint);
-   	}
+	public int linearSearchBoardingGate(int value, Flight first) {
+		Flight curr = first;
+		int pos = -1;
+		int counter = 0;
+		while(curr != null && pos == -1) {
+			if(curr.boardingGate == (value))
+				pos = counter;
+			counter++;
+			curr = curr.getNext();
+		}
+		return pos;
+    }
     
 	/* 
 	 * This function creates a String representing all the attributes of the object.
@@ -297,7 +286,8 @@ public class Flight implements Comparable<Flight>{
 	}
 
 	/**
-	 * @return the prev
+	 * This function obtains the previous flight in the linked list.
+	 * @return The previous flight in the linked list.
 	 */
 	public Flight getPrev() {
 		return prev;
@@ -305,7 +295,8 @@ public class Flight implements Comparable<Flight>{
 
 
 	/**
-	 * @param prev the prev to set
+	 * This function modifies the previous flight in the linked list.
+	 * @param prev The flight to swap with the current previous flight.
 	 */
 	public void setPrev(Flight prev) {
 		this.prev = prev;
@@ -313,7 +304,8 @@ public class Flight implements Comparable<Flight>{
 
 
 	/**
-	 * @return the next
+	 * This function obtains the next flight in the linked list.
+	 * @return The next flight in the linked list.
 	 */
 	public Flight getNext() {
 		return next;
@@ -321,12 +313,23 @@ public class Flight implements Comparable<Flight>{
 
 
 	/**
-	 * @param next the next to set
+	 * This function modifies the next flight in the linked list.
+	 * @param next The flight to swap with the current next.
 	 */
 	public void setNext(Flight next) {
 		this.next = next;
 	}
 	
+	
+	/**
+	 * This function modifies the data of this current flight. It is used to facilitate the implementation of the sorting algoritms.
+	 * @param airline The airline of the flight.
+	 * @param flightNumber The number of the flight.
+	 * @param destination The destination of the flight.
+	 * @param boardingGate The boarding gate of the flight.
+	 * @param flightDate The date at which the flight is going to take place.
+	 * @param flightTime The time at which the flight is going to take place.
+	 */
 	public void setData(String airline, String flightNumber, String destination, int boardingGate, FlightDate flightDate,	FlightTime flightTime) {
 		this.airline = airline;
 		this.flightNumber = flightNumber;

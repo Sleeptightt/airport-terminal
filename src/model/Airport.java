@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -29,11 +28,6 @@ public class Airport {
 	private String[] positions;
 	
 	/**
-	 * The number of flights in the airport.
-	 */
-	private int size;
-	
-	/**
 	 * This function initializes a new Airport.
 	 */
 	public Airport() {
@@ -46,7 +40,6 @@ public class Airport {
 	 * @param n The number of flights to be generated.
 	 */
 	public void generateFlights(int n) {
-		size = n;
 		for (int i = 0; i < n; i++) {
 			addFlight(getRandomFlight());
 		}
@@ -133,22 +126,32 @@ public class Airport {
 	 * @param c A comparator that determines the criteria in which the flights are going to be sorted.
 	 */
 	public void bubbleSort(Comparator<Flight> c) {
-		for (int i = 0; i < size; i++) {
-			Flight curr = first;
-			for(int j = 0; j < size-i-1;j++) {
-				if(c.compare(curr, curr.getNext()) > 0) {
-					String airline = curr.getAirline();
-					String flightNumber = curr.getFlightNumber();
-					String destination = curr.getDestination();
-					int boardingGate = curr.getBoardingGate();
-					FlightDate flightDate = curr.getFlightDate();
-					FlightTime flightTime = curr.getFlightTime();
-					curr.setData(curr.getNext().getAirline(), curr.getNext().getFlightNumber(), curr.getNext().getDestination(), curr.getNext().getBoardingGate(), curr.getNext().getFlightDate(), curr.getNext().getFlightTime());
-					curr.getNext().setData(airline, flightNumber, destination, boardingGate, flightDate, flightTime);
-				}
-					curr = curr.getNext();
-			}
-		}		
+		boolean swap = true;
+        while(swap) {
+            swap = false;
+            Flight current = first;
+            while(current.getNext() != null) {
+                Flight nextFlight = current.getNext();
+                if(c.compare(current, current.getNext())>0) {
+                    if(current.getPrev() != null) {
+                        current.getPrev().setNext(nextFlight);
+                    }
+                    if(nextFlight.getNext() != null) {
+                        nextFlight.getNext().setPrev(current);
+                    }
+                    current.setNext(nextFlight.getNext());
+                    nextFlight.setPrev(current.getPrev());
+                    current.setPrev(nextFlight);
+                    nextFlight.setNext(current);
+                    if(current == first)
+                        first = nextFlight;
+                    swap = true;
+                }
+                else
+                    current = current.getNext();
+                
+            }
+        }	
 	}
 	
 	/**
@@ -157,25 +160,88 @@ public class Airport {
 	 */
 	public void selectionSort(Comparator<Flight> c) {
 		Flight oCurr = first;
-		for (int i = 0; i < size-1; i++) {
-			Flight pos = oCurr;
-			Flight curr = pos.getNext();
-			for(int j = i+1; j < size;j++) {
-				if(c.compare(curr, pos) < 0) {
-					pos = curr;
-				}	
-				curr = curr.getNext();
-			}
-			String airline = oCurr.getAirline();
-			String flightNumber = oCurr.getFlightNumber();
-			String destination = oCurr.getDestination();
-			int boardingGate = oCurr.getBoardingGate();
-			FlightDate flightDate = oCurr.getFlightDate();
-			FlightTime flightTime = oCurr.getFlightTime();
-			oCurr.setData(pos.getAirline(), pos.getFlightNumber(), pos.getDestination(), pos.getBoardingGate(), pos.getFlightDate(), pos.getFlightTime());
-			pos.setData(airline, flightNumber, destination, boardingGate, flightDate, flightTime);
-			oCurr = oCurr.getNext();
-		}
+        while(oCurr.getNext()!=null) {
+            Flight pos = oCurr;
+            Flight curr = pos.getNext();
+            boolean better = false;
+            while(curr != null) {
+                if(c.compare(curr, pos) < 0) {
+                    pos = curr;
+                    better = true;
+                }    
+                curr = curr.getNext();
+            }
+            if(better) {
+            	if(oCurr.getNext() == pos) {
+            		if(oCurr.getPrev() != null) {
+                        oCurr.getPrev().setNext(pos);
+                    }
+                    if(pos.getNext() != null) {
+                        pos.getNext().setPrev(oCurr);
+                    }
+                    oCurr.setNext(pos.getNext());
+                    pos.setPrev(oCurr.getPrev());
+                    oCurr.setPrev(pos);
+                    pos.setNext(oCurr);
+                    if(oCurr == first)
+                        first = pos;
+            	}
+            	else if(oCurr.getPrev()!=null && pos.getNext()!= null) {
+	                Flight t1 = oCurr.getPrev();
+	                Flight t2 = oCurr.getNext();
+	                Flight t3 = pos.getPrev();
+	                Flight t4 = pos.getNext();
+	                oCurr.setNext(t4);
+	                oCurr.setPrev(t3);
+	                pos.setPrev(t1);
+	                pos.setNext(t2);
+	                t1.setNext(pos);
+	                t2.setPrev(pos);
+	                t3.setNext(oCurr);
+	                t4.setPrev(oCurr);
+	                if(oCurr == first)
+	                    first = pos;
+            	}
+            	else if(oCurr.getPrev() == null && pos.getNext() !=null) {
+            		Flight t2 = oCurr.getNext();
+	                Flight t3 = pos.getPrev();
+	                Flight t4 = pos.getNext();
+	                oCurr.setNext(t4);
+	                oCurr.setPrev(t3);
+	                pos.setPrev(null);
+	                pos.setNext(t2);
+	                t2.setPrev(pos);
+	                t3.setNext(oCurr);
+	                t4.setPrev(oCurr);
+	                first = pos;
+            	}
+            	else if(oCurr.getPrev() != null && pos.getNext() == null) {
+            		Flight t1 = oCurr.getPrev();
+	                Flight t2 = oCurr.getNext();
+	                Flight t3 = pos.getPrev();
+	                oCurr.setNext(null);
+	                oCurr.setPrev(t3);
+	                pos.setPrev(t1);
+	                pos.setNext(t2);
+	                t1.setNext(pos);
+	                t2.setPrev(pos);
+	                t3.setNext(oCurr);
+            	}
+            	else {
+            		Flight t2 = oCurr.getNext();
+	                Flight t3 = pos.getPrev();
+	                oCurr.setNext(null);
+	                oCurr.setPrev(t3);
+	                pos.setPrev(null);
+	                pos.setNext(t2);
+	                t2.setPrev(pos);
+	                t3.setNext(oCurr);
+	                first = pos;
+            	}
+            	oCurr = pos.getNext();
+            }else
+                oCurr = oCurr.getNext();
+        }
 		
 	}
 
@@ -184,28 +250,28 @@ public class Airport {
 	 * @param c A comparator that determines the criteria in which the flights are going to be sorted.
 	 */
 	public void insertionSort(Comparator<Flight> c) {
-		for (int i = 1; i < size; i++) {
-			Flight curr = first;
-			int counter = 0;
-			while(counter < i) {
-				curr = curr.getNext();
-				counter++;
-			}
-			for(int j = i; j > 0;j--) {
+		Flight oCurr = first.getNext();
+		while(oCurr != null) {
+			Flight curr = oCurr;
+			while(curr.getPrev()!=null) {
 				if(c.compare(curr, curr.getPrev()) < 0) {
-					String airline = curr.getAirline();
-					String flightNumber = curr.getFlightNumber();
-					String destination = curr.getDestination();
-					int boardingGate = curr.getBoardingGate();
-					FlightDate flightDate = curr.getFlightDate();
-					FlightTime flightTime = curr.getFlightTime();
 					Flight temp = curr.getPrev();
-					curr.setData(temp.getAirline(), temp.getFlightNumber(), temp.getDestination(), temp.getBoardingGate(), temp.getFlightDate(), temp.getFlightTime());
-					temp.setData(airline, flightNumber, destination, boardingGate, flightDate, flightTime);
-					
-				}
+					if(temp.getPrev() != null) {
+                        temp.getPrev().setNext(curr);
+                    }
+                    if(curr.getNext() != null) {
+                        curr.getNext().setPrev(temp);
+                    }
+                    temp.setNext(curr.getNext());
+                    curr.setPrev(temp.getPrev());
+                    temp.setPrev(curr);
+                    curr.setNext(temp);
+                    if(temp == first)
+                        first = curr;
+				}else
 				curr = curr.getPrev();
 			}
+			oCurr = oCurr.getNext();
 		}
 	}
 	
@@ -220,68 +286,39 @@ public class Airport {
 	 */
 	public Flight search(int criteria, String value) throws NumberFormatException, ArrayIndexOutOfBoundsException, StringIndexOutOfBoundsException{
         int pos = -1;
-        Flight[] f = getFLights().toArray(new Flight[size	]);
         if(criteria == 1) {
             String[] arr = value.split("/");
-            pos = f[0].linearSearchDate(f, new FlightDate(Integer.parseInt(arr[2]), Integer.parseInt(arr[1]), Integer.parseInt(arr[0])));
+            pos = first.linearSearchDate(new FlightDate(Integer.parseInt(arr[2]), Integer.parseInt(arr[1]), Integer.parseInt(arr[0])), first);
         }
         else if(criteria == 2) {
             int hour = Integer.parseInt(value.substring(0, 2));
             int minute = Integer.parseInt(value.substring(3, 5));
             String type = value.substring(6);
-            pos = f[0].linearSearchTime(f, new FlightTime(hour, minute, type));
+            pos = first.linearSearchTime(new FlightTime(hour, minute, type), first);
         }
         else if(criteria == 3) {
-        	Arrays.sort(f, new Comparator<Flight>() {
-				@Override
-				public int compare(Flight a, Flight b) {
-					int comparison = 0;
-					if (!a.getAirline().equals(b.getAirline()))
-						comparison = a.getAirline().compareTo(b.getAirline());
-					return comparison;
-				}
-			});
-            pos = f[0].binarySearchAirline(f, value, 0, f.length-1);
+            pos = first.linearSearchAirline(value, first);
         }
         else if(criteria == 4) {
-        	Arrays.sort(f, new Comparator<Flight>() {
-				@Override
-				public int compare(Flight a, Flight b) {
-					int comparison = 0;
-					if (!a.getFlightNumber().equals(b.getFlightNumber()))
-						comparison = a.getFlightNumber().compareTo(b.getFlightNumber());
-					return comparison;
-				}
-			});
-            pos = f[0].binarySearchFlightNumber(f, value, 0, f.length-1);
+        	pos = first.linearSearchFlightNumber(value, first);
         }
         else if(criteria == 5) {
-        	Arrays.sort(f, new Comparator<Flight>() {
-				@Override
-				public int compare(Flight a, Flight b) {
-					int comparison = 0;
-					if (!a.getDestination().equals(b.getDestination()))
-						comparison = a.getDestination().compareTo(b.getDestination());
-					return comparison;
-				}
-			});
-            pos = f[0].binarySearchDestination(f, value, 0, f.length-1);
+        	pos = first.linearSearchDestination(value, first);
         }
         else if(criteria == 6) {
-        	Arrays.sort(f, new Comparator<Flight>() {
-				@Override
-				public int compare(Flight a, Flight b) {
-					int comparison = 0;
-					if (a.getBoardingGate() != b.getBoardingGate())
-						comparison = a.getBoardingGate() - b.getBoardingGate();
-					return comparison;
-				}
-			});
-            pos = f[0].binarySearchBoardingGate(f, Integer.parseInt(value), 0, f.length-1);
+        	pos = first.linearSearchBoardingGate(Integer.parseInt(value), first);
         }
         Flight myFlight = null;
-        if(pos!=-1)
-        	myFlight = f[pos];
+        if(pos!=-1) {
+        	Flight curr = first;
+        	int counter = 0;
+        	while(counter <= pos) {
+        		if(counter == pos)
+        			myFlight = curr;
+        		curr = curr.getNext();
+        		counter++;
+        	}
+        }
         return myFlight;
     }
 	
@@ -322,5 +359,9 @@ public class Airport {
 			curr = curr.getNext();
 		}
 		return flights;
+	}
+	
+	public Flight getFirst() {
+		return first;
 	}
 }

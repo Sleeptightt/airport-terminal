@@ -2,10 +2,6 @@ package model;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.Comparator;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -77,8 +73,8 @@ class FlightTest {
 		Airport a = new Airport();
 		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
-		int pos = f.linearSearchDate(a.getFLights().toArray(new Flight[a.getFLights().size()]), f1.getFlightDate());
-		assertTrue("The search isn't right", a.getFLights().get(pos).equals(f1));
+		int pos = f.linearSearchDate(f1.getFlightDate(), a.getFirst());
+		assertTrue("The search isn't right", a.getFLights().get(pos).getFlightDate().equals(f1.getFlightDate()));
 	}
 	
 	/**
@@ -90,100 +86,60 @@ class FlightTest {
 		Airport a = new Airport();
 		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
-		int pos = f.linearSearchTime(a.getFLights().toArray(new Flight[a.getFLights().size()]), f1.getFlightTime());
-		assertTrue("The search isn't right", a.getFLights().get(pos).equals(f1));
+		int pos = f.linearSearchTime(f1.getFlightTime(), a.getFirst());
+		assertTrue("The search isn't right", a.getFLights().get(pos).getFlightTime().equals(f1.getFlightTime()));
 	}
 	
 	/**
-	 * This functions tests the airline binary search algorithm.
+	 * This functions tests the airline linear search algorithm.
 	 */
 	@Test
-	void binarySearchAirlineTest() {
+	void linearSearchAirlineTest() {
 		setupScenery2();
 		Airport a = new Airport();
 		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
-		Flight[] flights = a.getFLights().toArray(new Flight[a.getFLights().size()]);
-		Arrays.sort(flights, new Comparator<Flight>() {
-			@Override
-			public int compare(Flight a, Flight b) {
-				int comparison = 0;
-				if (!a.getAirline().equals(b.getAirline()))
-					comparison = a.getAirline().compareTo(b.getAirline());
-				return comparison;
-			}
-		});
-		int pos = f.binarySearchAirline(flights, f1.getAirline(), 0, a.getFLights().size()-1);
-		assertTrue("The search isn't right", flights[pos].getAirline().equals(f1.getAirline()));
+		int pos = f.linearSearchAirline(f1.getAirline(), a.getFirst());
+		assertTrue("The search isn't right", a.getFLights().get(pos).getAirline().equals(f1.getAirline()));
 	}
 	
 	/**
-	 * This functions tests the flight number binary search algorithm.
+	 * This functions tests the flight number linear search algorithm.
 	 */
 	@Test
-	void binarySearchFlightNumberTest() {
+	void linearSearchFlightNumberTest() {
 		setupScenery2();
 		Airport a = new Airport();
 		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
-		Flight[] flights = a.getFLights().toArray(new Flight[a.getFLights().size()]);
-		Arrays.sort(flights, new Comparator<Flight>() {
-			@Override
-			public int compare(Flight a, Flight b) {
-				int comparison = 0;
-				if (!a.getFlightNumber().equals(b.getFlightNumber()))
-					comparison = a.getFlightNumber().compareTo(b.getFlightNumber());
-				return comparison;
-			}
-		});
-		int pos = f.binarySearchFlightNumber(flights, f1.getFlightNumber(), 0, a.getFLights().size()-1);
-		assertTrue("The search isn't right", flights[pos].getFlightNumber().equals(f1.getFlightNumber()));
+		int pos = f.linearSearchFlightNumber(f1.getFlightNumber(), a.getFirst());
+		assertTrue("The search isn't right", a.getFLights().get(pos).getFlightNumber().equals(f1.getFlightNumber()));
 	}
 	
 	/**
-	 * This functions tests the destination binary search algorithm.
+	 * This functions tests the destination linear search algorithm.
 	 */
 	@Test
-	void binarySearchDestinationTest() {
+	void linearSearchDestinationTest() {
 		setupScenery2();
 		Airport a = new Airport();
 		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
-		Flight[] flights = a.getFLights().toArray(new Flight[a.getFLights().size()]);
-		Arrays.sort(flights, new Comparator<Flight>() {
-			@Override
-			public int compare(Flight a, Flight b) {
-				int comparison = 0;
-				if (!a.getDestination().equals(b.getDestination()))
-					comparison = a.getDestination().compareTo(b.getDestination());
-				return comparison;
-			}
-		});
-		int pos = f.binarySearchDestination(flights, f1.getDestination(), 0, a.getFLights().size()-1);
-		assertTrue("The search isn't right", flights[pos].getDestination().equals(f1.getDestination()));
+		int pos = f.linearSearchDestination(f1.getDestination(), a.getFirst());
+		assertTrue("The search isn't right", a.getFLights().get(pos).getDestination().equals(f1.getDestination()));
 	}
 	
 	/**
-	 * This functions tests the boarding gate binary search algorithm.
+	 * This functions tests the boarding gate linear search algorithm.
 	 */
 	@Test
-	void binarySearchBoardingGateTest() {
+	void linearSearchBoardingGateTest() {
 		setupScenery2();
 		Airport a = new Airport();
 		a.generateFlights(11);
 		Flight f1 = a.getFLights().get(10);
-		Flight[] flights = a.getFLights().toArray(new Flight[a.getFLights().size()]);
-		Arrays.sort(flights, new Comparator<Flight>() {
-			@Override
-			public int compare(Flight a, Flight b) {
-				int comparison = 0;
-				if (a.getBoardingGate() != b.getBoardingGate())
-					comparison = a.getBoardingGate() - b.getBoardingGate();
-				return comparison;
-			}
-		});
-		int pos = f.binarySearchBoardingGate(flights, f1.getBoardingGate(), 0, a.getFLights().size()-1);
-		assertTrue("The search isn't right", flights[pos].getBoardingGate() == f1.getBoardingGate());
+		int pos = f.linearSearchBoardingGate(f1.getBoardingGate(), a.getFirst());
+		assertTrue("The search isn't right", a.getFLights().get(pos).getBoardingGate() == (f1.getBoardingGate()));
 	}
 	
 }
